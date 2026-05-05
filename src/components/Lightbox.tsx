@@ -27,6 +27,26 @@ export default function Lightbox({ photo, onClose, onNext, onPrev, onUpdate, ann
     setEditDate(photo.date || '');
   }, [photo]);
 
+  React.useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isEditing) return;
+      
+      if (e.key === 'ArrowRight' && onNext) onNext();
+      if (e.key === 'ArrowLeft' && onPrev) onPrev();
+      if (e.key === 'Escape') onClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onNext, onPrev, onClose, isEditing]);
+
   const handleSave = () => {
     if (onUpdate) {
       onUpdate(photo.id, editCaption, editDate);

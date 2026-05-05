@@ -3,16 +3,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
-import { Calendar, Search, X } from 'lucide-react';
+import { Calendar, Search, X, SortDesc } from 'lucide-react';
 
 interface GalleryFiltersProps {
   onYearChange: (year: string) => void;
   onMonthChange: (month: string) => void;
   onSearchChange: (search: string) => void;
+  onSortChange: (sort: 'event' | 'upload') => void;
   selectedYear: string;
   selectedMonth: string;
   searchQuery: string;
+  sortBy: 'event' | 'upload';
   availableYears: string[];
 }
 
@@ -20,9 +21,11 @@ export default function GalleryFilters({
   onYearChange,
   onMonthChange,
   onSearchChange,
+  onSortChange,
   selectedYear,
   selectedMonth,
   searchQuery,
+  sortBy,
   availableYears
 }: GalleryFiltersProps) {
   const months = [
@@ -62,8 +65,20 @@ export default function GalleryFilters({
         )}
       </div>
 
-      <div className="flex gap-2 w-full md:w-auto">
-        <div className="relative flex-1 md:w-32">
+      <div className="flex flex-wrap md:flex-nowrap gap-2 w-full md:w-auto">
+        <div className="relative flex-1 min-w-[120px]">
+          <SortDesc className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-romantic-muted pointer-events-none" />
+          <select
+            value={sortBy}
+            onChange={(e) => onSortChange(e.target.value as 'event' | 'upload')}
+            className="w-full pl-10 pr-8 py-2 bg-romantic-bg/30 dark:bg-black/20 rounded-xl border border-transparent focus:border-romantic-accent/20 outline-none transition-all text-xs md:text-sm appearance-none cursor-pointer"
+          >
+            <option value="event" className="dark:bg-romantic-dark-card">Data zdjęcia</option>
+            <option value="upload" className="dark:bg-romantic-dark-card">Data dodania</option>
+          </select>
+        </div>
+
+        <div className="relative flex-1 min-w-[120px]">
           <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-romantic-muted pointer-events-none" />
           <select
             value={selectedYear}
@@ -77,7 +92,7 @@ export default function GalleryFilters({
           </select>
         </div>
 
-        <div className="relative flex-1 md:w-44">
+        <div className="relative flex-1 min-w-[120px]">
           <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-romantic-muted pointer-events-none" />
           <select
             value={selectedMonth}

@@ -56,6 +56,7 @@ export default function App() {
   const [filterYear, setFilterYear] = useState('');
   const [filterMonth, setFilterMonth] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'event' | 'upload'>('event');
 
   const availableYears = Array.from(new Set<string>(
     photos
@@ -64,14 +65,19 @@ export default function App() {
   ));
 
   const filteredPhotos = [...photos].sort((a, b) => {
-    // Sort by user date string if available, otherwise fallback to createdAt
-    const dateA = a.date || new Date(a.createdAt).toISOString().split('T')[0];
-    const dateB = b.date || new Date(b.createdAt).toISOString().split('T')[0];
-    
-    if (dateA !== dateB) {
-      return dateB.localeCompare(dateA); // Newest date first
+    if (sortBy === 'event') {
+      // Sort by user-set photo date
+      const dateA = a.date || '';
+      const dateB = b.date || '';
+      
+      if (dateA !== dateB) {
+        return dateB.localeCompare(dateA); // Newest date first
+      }
+      return b.createdAt - a.createdAt; // Then by exact upload time as fallback
+    } else {
+      // Sort by upload date (createdAt)
+      return b.createdAt - a.createdAt;
     }
-    return b.createdAt - a.createdAt; // Then by exact upload time
   }).filter(photo => {
     const matchesSearch = (photo.caption || '').toLowerCase().includes(searchQuery.toLowerCase());
     
@@ -334,10 +340,17 @@ export default function App() {
         <div className="max-w-6xl mx-auto px-4 md:px-6 h-20 flex justify-between items-center relative">
           <div className="flex items-center gap-3">
             <motion.div
-              animate={{ scale: [1, 1.15, 1] }}
-              transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+              animate={{ 
+                scale: [1, 1.12, 1],
+                opacity: [0.9, 1, 0.9]
+              }}
+              transition={{ 
+                repeat: Infinity, 
+                duration: 3, 
+                ease: "easeInOut" 
+              }}
             >
-              <Heart className="text-romantic-accent fill-romantic-accent w-5 h-5 md:w-6 h-6" />
+              <Heart className="text-romantic-accent fill-romantic-accent w-5 h-5 md:w-6 h-6 drop-shadow-[0_0_8px_rgba(236,72,153,0.3)]" />
             </motion.div>
             <h1 className={`text-xl md:text-2xl font-serif truncate max-w-[200px] md:max-w-none ${background.type === 'image' ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,1)]' : 'dark:text-white text-romantic-text'}`}>
               {names.HE} & {names.SHE}
@@ -466,9 +479,11 @@ export default function App() {
             onYearChange={setFilterYear}
             onMonthChange={setFilterMonth}
             onSearchChange={setSearchQuery}
+            onSortChange={setSortBy}
             selectedYear={filterYear}
             selectedMonth={filterMonth}
             searchQuery={searchQuery}
+            sortBy={sortBy}
             availableYears={availableYears}
           />
           

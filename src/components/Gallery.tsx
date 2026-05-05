@@ -98,14 +98,13 @@ export default function Gallery({ photos, onDelete, onUpdate, startDate }: Galle
             {photos.map((photo, index) => (
               <motion.div
                 key={photo.id}
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                 whileHover={{ y: -5, shadow: "0 20px 25px -5px rgb(0 0 0 / 0.1)" }}
                 transition={{ 
-                  duration: 0.5,
-                  delay: (index % 12) * 0.05, // Reset delay slightly for long lists
-                  type: "spring",
-                  stiffness: 100
+                  duration: 0.7,
+                  delay: (index % 12) * 0.03, // More subtle delay
+                  ease: [0.21, 0.47, 0.32, 0.98] // Smooth cubic-bezier
                 }}
                 viewport={{ once: true, margin: "-50px" }}
                 className={`relative group break-inside-avoid rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all bg-white cursor-zoom-in ${
@@ -171,11 +170,11 @@ export default function Gallery({ photos, onDelete, onUpdate, startDate }: Galle
                 
                 <div className="w-full md:w-[calc(50%-40px)]">
                   <motion.div
-                    initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50, scale: 0.9 }}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30, scale: 0.98 }}
                     whileInView={{ opacity: 1, x: 0, scale: 1 }}
                     whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.6, type: "spring" }}
-                    viewport={{ once: true, margin: "-20px" }}
+                    transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
+                    viewport={{ once: true, margin: "-50px" }}
                     className={`relative bg-white dark:bg-romantic-dark-card p-5 rounded-[2.5rem] shadow-xl border cursor-zoom-in ${
                       getAnniversary(photo.date) 
                         ? 'border-romantic-accent ring-4 ring-romantic-accent/20' 
