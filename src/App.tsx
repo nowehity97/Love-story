@@ -339,7 +339,7 @@ export default function App() {
             >
               <Heart className="text-romantic-accent fill-romantic-accent w-5 h-5 md:w-6 h-6" />
             </motion.div>
-            <h1 className={`text-xl md:text-2xl font-serif truncate max-w-[200px] md:max-w-none ${background.type === 'image' ? 'text-white' : 'dark:text-white text-romantic-text'}`}>
+            <h1 className={`text-xl md:text-2xl font-serif truncate max-w-[200px] md:max-w-none ${background.type === 'image' ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,1)]' : 'dark:text-white text-romantic-text'}`}>
               {names.HE} & {names.SHE}
             </h1>
           </div>

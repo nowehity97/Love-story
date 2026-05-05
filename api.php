@@ -152,16 +152,17 @@ if ($method === 'POST') {
         }
 
         if ($action === 'generate_story') {
-            $key = $gemini_api_key ?: getenv('GEMINI_API_KEY');
+            $key = $gemini_api_key ?: getenv('GEMINI_API_KEY') ?: ($_ENV['GEMINI_API_KEY'] ?? '');
             if (!$key) {
                 http_response_code(400);
-                echo json_encode(["error" => "Brak klucza API Gemini. Skonfiguruj go w api.php"]);
+                echo json_encode(["error" => "Brak klucza API Gemini. Skonfiguruj go w api.php w zmiennej \$gemini_api_key"]);
                 exit;
             }
 
             $prompt = $data['prompt'] ?? '';
             
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $key;
+            // Using v1beta and gemini-flash-latest from user example
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
             
             $postData = [
                 "contents" => [
@@ -171,7 +172,10 @@ if ($method === 'POST') {
 
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'X-goog-api-key: ' . $key
+            ]);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
             

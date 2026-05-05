@@ -57,7 +57,11 @@ export default function StoryHighlights({ photos, onSaveSummary, savedSummary, n
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.error || 'Generowanie nie powiodło się');
+        console.log('API Error Data:', errData);
+        
+        // Handle nested Gemini error objects
+        const errorMessage = errData.error?.message || errData.message || 'Generowanie opowieści nie powiodło się. Sprawdź swój klucz API w pliku api.php.';
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -65,7 +69,7 @@ export default function StoryHighlights({ photos, onSaveSummary, savedSummary, n
         setSummary(data.text);
         onSaveSummary(data.text);
       } else {
-        throw new Error('Pusta odpowiedź od AI');
+        throw new Error('AI nie zwróciło żadnego tekstu. Spróbuj dodać więcej opisów do zdjęć.');
       }
     } catch (err: any) {
       console.error('Generation error:', err);
@@ -154,9 +158,9 @@ export default function StoryHighlights({ photos, onSaveSummary, savedSummary, n
                 animate={{ opacity: 1 }}
                 className="relative"
               >
-                <div className={`prose prose-romantic max-w-none ${isDark ? 'text-white/90' : 'text-romantic-text'} leading-relaxed space-y-6 font-light`}>
+                <div className={`prose prose-romantic max-w-none ${isDark ? 'text-white' : 'text-romantic-text'} leading-relaxed space-y-6`}>
                   {summary.split('\n\n').map((paragraph, idx) => (
-                    <p key={idx} className="text-lg md:text-xl italic font-serif opacity-90 first-letter:text-3xl first-letter:font-bold first-letter:mr-1 first-letter:float-left">
+                    <p key={idx} className={`text-lg md:text-xl italic font-serif leading-relaxed ${isDark ? 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] font-medium' : 'opacity-90'}`}>
                       {paragraph}
                     </p>
                   ))}

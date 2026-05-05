@@ -123,7 +123,14 @@ async function startServer() {
     }
   });
 
-  app.post('/api.php', upload.single('photo'), async (req, res) => {
+  app.post('/api.php', (req, res, next) => {
+    // If it's a JSON request (like AI generation or settings), skip multer
+    if (req.is('json')) {
+      return next();
+    }
+    // Otherwise use multer for uploads
+    upload.single('photo')(req, res, next);
+  }, async (req, res) => {
     // Bucket list actions
     if (req.query.action) {
       const action = req.query.action;
@@ -155,23 +162,37 @@ async function startServer() {
           const { prompt } = req.body;
           const apiKey = process.env.GEMINI_API_KEY;
           
+          console.log('Generating story with prompt length:', prompt?.length);
+
           if (!apiKey) {
-            return res.status(400).json({ error: 'GEMINI_API_KEY is not set' });
+            console.error('GEMINI_API_KEY missing in environment variables');
+            return res.status(400).json({ error: 'Brak klucza API Gemini w środowisku.' });
           }
 
           try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent`, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 
+                'Content-Type': 'application/json',
+                'X-goog-api-key': apiKey
+              },
               body: JSON.stringify({
                 contents: [{ parts: [{ text: prompt }] }]
               })
             });
+            
+            if (!response.ok) {
+              const errorData = await response.json();
+              console.error('Gemini API Error:', errorData);
+              return res.status(response.status).json({ error: errorData.error?.message || 'Błąd API Gemini' });
+            }
+
             const data = await response.json();
             const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
             return res.json({ text });
-          } catch (error) {
-            return res.status(500).json({ error: 'Gemini API call failed' });
+          } catch (error: any) {
+            console.error('Fetch error during generation:', error);
+            return res.status(500).json({ error: 'Nie udało się połączyć z API Gemini: ' + error.message });
           }
         }
       } catch (error) {
