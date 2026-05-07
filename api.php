@@ -296,7 +296,7 @@ if ($method === 'POST') {
         
         if (move_uploaded_file($_FILES['photo']['tmp_name'], $target_file)) {
             $createdAt = time() * 1000;
-            $url = '/' . $target_file;
+            $url = $target_file;
             
             $stmt = $db->prepare("INSERT INTO photos (id, url, caption, date, createdAt, userId) VALUES (:id, :url, :caption, :date, :createdAt, :userId)");
             $stmt->bindValue(':id', $id);

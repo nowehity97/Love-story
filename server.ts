@@ -216,7 +216,7 @@ async function startServer() {
     if (req.query.action === 'upload_profile_pic') {
       const person = (req.query.person as string) || 'HE';
       if (req.file) {
-        const url = `/uploads/${req.file.filename}`;
+        const url = `uploads/${req.file.filename}`;
         
         try {
           const row = db.prepare("SELECT value FROM settings WHERE key = 'profile_pics'").get() as { value: string } | undefined;
@@ -257,7 +257,7 @@ async function startServer() {
 
     const { caption, date } = req.body;
     const id = Date.now().toString();
-    const url = `/uploads/${req.file.filename}`;
+    const url = `uploads/${req.file.filename}`;
     const createdAt = Date.now();
 
     try {
@@ -286,7 +286,7 @@ async function startServer() {
 
     const { caption, date } = req.body;
     const id = Date.now().toString(); // Simple ID
-    const url = `/uploads/${req.file.filename}`;
+    const url = `uploads/${req.file.filename}`;
     const createdAt = Date.now();
     const userId = 'local-user';
 

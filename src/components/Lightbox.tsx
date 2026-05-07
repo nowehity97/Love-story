@@ -54,63 +54,69 @@ export default function Lightbox({ photo, onClose, onNext, onPrev, onUpdate, ann
     setIsEditing(false);
   };
 
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 md:p-8"
-      onClick={onClose}
-    >
-      <div className="absolute top-6 right-6 flex items-center gap-4 z-[110]">
-        {onUpdate && (
+    const getImageUrl = (url: string) => {
+      if (!url) return '';
+      if (url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:')) return url;
+      return url.startsWith('/') ? url.substring(1) : url;
+    };
+
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 md:p-8"
+        onClick={onClose}
+      >
+        <div className="absolute top-6 right-6 flex items-center gap-4 z-[110]">
+          {onUpdate && (
+            <button 
+              onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); }}
+              className="text-white/50 hover:text-white transition-colors"
+            >
+              <Edit2 className="w-6 h-6" />
+            </button>
+          )}
           <button 
-            onClick={(e) => { e.stopPropagation(); setIsEditing(!isEditing); }}
+            onClick={onClose}
             className="text-white/50 hover:text-white transition-colors"
           >
-            <Edit2 className="w-6 h-6" />
+            <X className="w-8 h-8" />
+          </button>
+        </div>
+  
+        {onPrev && (
+          <button 
+            onClick={(e) => { e.stopPropagation(); onPrev(); }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-white/50 hover:text-white bg-white/5 rounded-full backdrop-blur-md transition-all z-[110]"
+          >
+            <ChevronLeft className="w-8 h-8" />
           </button>
         )}
-        <button 
-          onClick={onClose}
-          className="text-white/50 hover:text-white transition-colors"
+  
+        {onNext && (
+          <button 
+            onClick={(e) => { e.stopPropagation(); onNext(); }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-white/50 hover:text-white bg-white/5 rounded-full backdrop-blur-md transition-all z-[110]"
+          >
+            <ChevronRight className="w-8 h-8" />
+          </button>
+        )}
+  
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="relative max-w-5xl w-full max-h-full flex flex-col md:flex-row gap-6 items-center"
+          onClick={(e) => e.stopPropagation()}
         >
-          <X className="w-8 h-8" />
-        </button>
-      </div>
-
-      {onPrev && (
-        <button 
-          onClick={(e) => { e.stopPropagation(); onPrev(); }}
-          className="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-white/50 hover:text-white bg-white/5 rounded-full backdrop-blur-md transition-all z-[110]"
-        >
-          <ChevronLeft className="w-8 h-8" />
-        </button>
-      )}
-
-      {onNext && (
-        <button 
-          onClick={(e) => { e.stopPropagation(); onNext(); }}
-          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-white/50 hover:text-white bg-white/5 rounded-full backdrop-blur-md transition-all z-[110]"
-        >
-          <ChevronRight className="w-8 h-8" />
-        </button>
-      )}
-
-      <motion.div 
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="relative max-w-5xl w-full max-h-full flex flex-col md:flex-row gap-6 items-center"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex-1 relative group w-full flex justify-center items-center overflow-hidden rounded-2xl shadow-2xl">
-          <img 
-            src={photo.url} 
-            alt={photo.caption}
-            className="max-h-[70vh] md:max-h-[85vh] object-contain rounded-lg shadow-2xl"
-          />
-        </div>
+          <div className="flex-1 relative group w-full flex justify-center items-center overflow-hidden rounded-2xl shadow-2xl">
+            <img 
+              src={getImageUrl(photo.url)} 
+              alt={photo.caption}
+              className="max-h-[70vh] md:max-h-[85vh] object-contain rounded-lg shadow-2xl"
+            />
+          </div>
 
         <div className="w-full md:w-80 flex flex-col gap-4 text-white p-4">
           {isEditing ? (

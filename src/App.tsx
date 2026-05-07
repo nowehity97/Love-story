@@ -212,10 +212,16 @@ export default function App() {
     }
   }, [background, isDarkMode]);
 
+  const getImageUrl = (url: string) => {
+    if (!url) return '';
+    if (url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:')) return url;
+    return url.startsWith('/') ? url.substring(1) : url;
+  };
+
   const getBackgroundStyle = () => {
     if (background.type === 'image') {
       return {
-        backgroundImage: `url(${background.value})`,
+        backgroundImage: `url(${getImageUrl(background.value)})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -379,7 +385,7 @@ export default function App() {
               className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-white dark:border-romantic-dark-card shadow-xl bg-romantic-accent/10"
             >
               {profilePics.HE ? (
-                <img src={profilePics.HE} alt={names.HE} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                <img src={getImageUrl(profilePics.HE)} alt={names.HE} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-romantic-accent text-xl md:text-2xl font-bold font-serif">{names.HE[0]}</div>
               )}
@@ -406,7 +412,7 @@ export default function App() {
               className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-white dark:border-romantic-dark-card shadow-xl bg-romantic-accent/10"
             >
               {profilePics.SHE ? (
-                <img src={profilePics.SHE} alt={names.SHE} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                <img src={getImageUrl(profilePics.SHE)} alt={names.SHE} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-romantic-accent text-xl md:text-2xl font-bold font-serif">{names.SHE[0]}</div>
               )}

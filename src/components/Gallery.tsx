@@ -59,6 +59,13 @@ export default function Gallery({ photos, onDelete, onUpdate, startDate }: Galle
     }
   };
 
+  const getImageUrl = (url: string) => {
+    if (!url) return '';
+    if (url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:')) return url;
+    // Remove leading slash if present to make it relative to the app's current directory
+    return url.startsWith('/') ? url.substring(1) : url;
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex justify-end gap-2 mb-4">
@@ -119,7 +126,7 @@ export default function Gallery({ photos, onDelete, onUpdate, startDate }: Galle
                   </div>
                 )}
                 <img
-                  src={photo.url}
+                  src={getImageUrl(photo.url)}
                   alt={photo.caption}
                   className="w-full h-auto object-cover"
                   referrerPolicy="no-referrer"
@@ -188,7 +195,7 @@ export default function Gallery({ photos, onDelete, onUpdate, startDate }: Galle
                       </div>
                     )}
                     <div className="aspect-[4/3] rounded-3xl overflow-hidden mb-5">
-                      <img src={photo.url} alt={photo.caption} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                      <img src={getImageUrl(photo.url)} alt={photo.caption} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
                     </div>
                     <div className="px-2">
                       <div className="flex items-center gap-2 text-romantic-accent text-xs font-bold uppercase tracking-wider mb-3">
