@@ -18,6 +18,7 @@ import GalleryFilters from './components/GalleryFilters';
 import AddPhotoModal from './components/AddPhotoModal';
 import Settings from './components/Settings';
 import Toast, { ToastType } from './components/Toast';
+import { calculateTimeElapsed, getImageUrl } from './utils.ts';
 import { Photo } from './types';
 
 export default function App() {
@@ -211,12 +212,6 @@ export default function App() {
       document.body.style.backgroundColor = style.backgroundColor as string;
     }
   }, [background, isDarkMode]);
-
-  const getImageUrl = (url: string) => {
-    if (!url) return '';
-    if (url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:')) return url;
-    return url.startsWith('/') ? url.substring(1) : url;
-  };
 
   const getBackgroundStyle = () => {
     if (background.type === 'image') {

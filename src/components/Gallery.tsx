@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Photo } from '../types';
 import { Camera, Calendar, Trash2, LayoutGrid, List, Heart } from 'lucide-react';
 import Lightbox from './Lightbox';
+import { getImageUrl } from '../utils.ts';
 
 interface GalleryProps {
   photos: Photo[];
@@ -57,13 +58,6 @@ export default function Gallery({ photos, onDelete, onUpdate, startDate }: Galle
     if (selectedPhotoIndex !== null) {
       setSelectedPhotoIndex((selectedPhotoIndex - 1 + photos.length) % photos.length);
     }
-  };
-
-  const getImageUrl = (url: string) => {
-    if (!url) return '';
-    if (url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:')) return url;
-    // Remove leading slash if present to make it relative to the app's current directory
-    return url.startsWith('/') ? url.substring(1) : url;
   };
 
   return (

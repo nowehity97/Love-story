@@ -7,6 +7,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Calendar, MessageSquare, ChevronLeft, ChevronRight, Edit2, Check, Heart } from 'lucide-react';
 import { Photo } from '../types';
+import { getImageUrl } from '../utils.ts';
 
 interface LightboxProps {
   photo: Photo;
@@ -53,12 +54,6 @@ export default function Lightbox({ photo, onClose, onNext, onPrev, onUpdate, ann
     }
     setIsEditing(false);
   };
-
-    const getImageUrl = (url: string) => {
-      if (!url) return '';
-      if (url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:')) return url;
-      return url.startsWith('/') ? url.substring(1) : url;
-    };
 
     return (
       <motion.div

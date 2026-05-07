@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Settings as SettingsIcon, Save, User, Camera, Calendar, Music, Moon, Sun } from 'lucide-react';
+import { getImageUrl } from '../utils.ts';
 
 interface SettingsProps {
   names: { HE: string; SHE: string };
@@ -152,7 +153,7 @@ export default function Settings({ names, profilePics, startDate, spotifyUrl, da
                       <div className="flex gap-4 items-center">
                         {editBackground.type === 'image' && (
                           <div className="w-12 h-12 rounded-lg overflow-hidden border-2 border-romantic-accent flex-shrink-0">
-                            <img src={editBackground.value} className="w-full h-full object-cover" />
+                            <img src={getImageUrl(editBackground.value)} className="w-full h-full object-cover" />
                           </div>
                         )}
                         <input
@@ -214,7 +215,7 @@ export default function Settings({ names, profilePics, startDate, spotifyUrl, da
                       <label className="text-[10px] text-romantic-muted font-bold uppercase">Zdjęcie {editNames.HE}</label>
                       <div className="flex gap-4 items-center">
                         <div className="w-12 h-12 rounded-full overflow-hidden bg-romantic-accent/5 border border-romantic-accent/10 flex-shrink-0">
-                          {editPics.HE ? <img src={editPics.HE} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-romantic-accent font-bold">{editNames.HE[0]}</div>}
+                          {editPics.HE ? <img src={getImageUrl(editPics.HE)} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-romantic-accent font-bold">{editNames.HE[0]}</div>}
                         </div>
                         <input
                           type="file"
@@ -236,7 +237,7 @@ export default function Settings({ names, profilePics, startDate, spotifyUrl, da
                       <label className="text-[10px] text-romantic-muted font-bold uppercase">Zdjęcie {editNames.SHE}</label>
                       <div className="flex gap-4 items-center">
                         <div className="w-12 h-12 rounded-full overflow-hidden bg-romantic-accent/5 border border-romantic-accent/10 flex-shrink-0">
-                          {editPics.SHE ? <img src={editPics.SHE} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-romantic-accent font-bold">{editNames.SHE[0]}</div>}
+                          {editPics.SHE ? <img src={getImageUrl(editPics.SHE)} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-romantic-accent font-bold">{editNames.SHE[0]}</div>}
                         </div>
                         <input
                           type="file"

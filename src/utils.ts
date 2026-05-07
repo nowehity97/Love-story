@@ -28,3 +28,11 @@ export function calculateTimeElapsed(startDate: string): TimeElapsed {
 
   return { years, months, days, totalDays };
 }
+
+export function getImageUrl(url: string | null | undefined): string {
+  if (!url) return '';
+  if (url.startsWith('http') || url.startsWith('blob:') || url.startsWith('data:')) return url;
+  // Remove leading slash if present to make it relative to the app's current directory
+  const path = url.startsWith('/') ? url.substring(1) : url;
+  return path;
+}
